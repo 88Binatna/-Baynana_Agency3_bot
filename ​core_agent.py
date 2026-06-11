@@ -4,9 +4,6 @@ from datetime import datetime
 from telebot import TeleBot, types
 from telebot.util import smart_split
 
-# ==========================================
-# 1. إعدادات النظام الأمني والتدقيق (Security Logging)
-# ==========================================
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - [%(levelname)s] - %(message)s",
@@ -17,30 +14,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger("AutonomousAgency")
 
-# ==========================================
-# 2. تهيئة البيئة والاتصال (Environment Setup)
-# ==========================================
-# ملاحظة للمالك: يتم سحب التوكن من متغيرات البيئة لضمان الأمان الأقصى
 BOT_TOKEN = os.environ.get("AGENCY_BOT_TOKEN", "YOUR_TELEGRAM_BOT_TOKEN_HERE")
 
-if BOT_TOKEN == "YOUR_TELEGRAM_BOT_TOKEN_HERE":
-    logger.warning("🚨 طارئ: لم يتم ضبط TOKEN الحقيقي في بيئة العمل! النظام يعمل بالوضع الافتراضي.")
+if BOT_TOKEN == "8922664046:AAG2lxybAfWFLCePQ834WeqwsX0BkOZ4dPM ":
+    logger.warning("🚨 EMERGENCY: No real TOKEN set in environment variables!")
 
 bot = TeleBot(BOT_TOKEN)
 
-# ==========================================
-# 3. محرك الرؤية والذكاء الاستشاري
-# ==========================================
 class BusinessEngine:
     def __init__(self):
         self.agency_name = "Baynana Autonomous Core"
         self.status = "Active & Scalable"
         
     def generate_strategic_response(self, user_query: str) -> str:
-        """
-        محرك معالجة الطلبات وتحليل استفسارات العملاء رقمياً.
-        هنا يتم دمج الذكاء الاصطناعي لتوليد حلول أتمتة فورية.
-        """
         query_lower = user_query.lower()
         if "تطوير" in query_lower or "برمجة" in query_lower:
             return "📌 خطة الأتمتة المقترحة: نوصي ببناء نظام ميكرو-خدمي يعتمد على Python وفحص أمني عبر سكريبتات دقيقة. يمكننا جدولة البناء فوراً."
@@ -53,13 +39,10 @@ class BusinessEngine:
 
 engine = BusinessEngine()
 
-# ==========================================
-# 4. معالجات الأحداث والتحركات الذاتية (Handlers)
-# ==========================================
 @bot.message_handler(commands=['start'])
 def handle_welcome(message):
     user_info = f"User: {message.from_user.id} - @{message.from_user.username}"
-    logger.info(f"🔑 دخول مستخدم جديد للمنظومة: {user_info}")
+    logger.info(f"🔑 New User Connected: {user_info}")
     
     welcome_text = (
         "💼 **مرحباً بك في الكيان الذكي المستقل**\n\n"
@@ -68,7 +51,6 @@ def handle_welcome(message):
         "أرسل طلبك أو استشارتك الآن، وسيقوم النظام بمعالجتها فوراً."
     )
     
-    # واجهة أزرار تفاعلية لإدارة تدفق العمل
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     markup.add(types.KeyboardButton("🛠️ طلب حل برمي وأتمتة"))
     markup.add(types.KeyboardButton("🛡️ فحص الحالة الأمنية للنظام"))
@@ -78,24 +60,14 @@ def handle_welcome(message):
 
 @bot.message_handler(func=lambda message: True)
 def handle_autonomous_operations(message):
-    # تسجيل أمني لكل حركة داخل البوت للاسترجاع عند الطوارئ
-    logger.info(f"📥 معالجة طلب من [{message.from_user.id}]: {message.text}")
-    
-    # تشغيل محرك اتخاذ القرار
+    logger.info(f"📥 Processing request from [{message.from_user.id}]: {message.text}")
     response = engine.generate_strategic_response(message.text)
-    
-    # إرسال الرد التلقائي للعميل
     bot.reply_to(message, response)
-    logger.info(f"📤 تم إرسال الرد وتأمين العملية بنجاح لصالح المستفيد [{message.from_user.id}].")
+    logger.info(f"📤 Response sent successfully to [{message.from_user.id}].")
 
-# ==========================================
-# 5. بروتوكول التشغيل الذاتي الذكي
-# ==========================================
 if __name__ == "__main__":
-    logger.info(f"🚀 إطلاق الشركة المستقلة المحدودة... الحالة: {engine.status}")
+    logger.info(f"🚀 Launching Autonomous Core... Status: {engine.status}")
     try:
-        # تشغيل مستمر مع تجاوز الأخطاء الطفيفة تلقائياً دون إزعاج المالك
         bot.infinity_polling(timeout=10, long_polling_timeout=5)
     except Exception as e:
-        logger.critical(f"🚨 طارئ نظامي حرج: {str(e)}")
-        print("💡 تنبيه للمالك: يتطلب الأمر فحص اتصال السيرفر أو صلاحية التوكن.")
+        logger.critical(f"🚨 CRITICAL SYSTEM ERROR: {str(e)}")
